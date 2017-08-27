@@ -4,6 +4,8 @@ module.exports = function (context, req) {
     var baseUrl = getEnvironmentVariable("KokoroIoBaseUrl");
     var authorization = req.headers["Authorization"];
 
+    context.done();
+
     if(!callbackSecret)
         return context.log("Please configure KokoroIoCallbackSecret.");
 

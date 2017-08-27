@@ -1,17 +1,32 @@
 module.exports = function (context, req) {
-    var statusCode = 400;
-    var responseBody = "Invalid request object";
+    var callbackSecret = GetEnvironmentVariable("KokoroIoCallbackSecret");
+    var accessToken = GetEnvironmentVariable("KokoroIoAccessToken");
+    var baseUrl = GetEnvironmentVariable("KokoroIoBaseUrl");
+    var authorization = req.headers["Authorization"];
 
-    if (typeof req.body != 'undefined' && typeof req.body == 'object') {
-        statusCode = 201;
-        context.bindings.outTable = req.body;
-        responseBody = "Table Storage Created";
-    }
+    if(!callbackSecret)
+        return context.log("Please configure KokoroIoCallbackSecret.");
 
-    context.res = {
-        status: statusCode,
-        body: responseBody
-    };
+    if(!authorization)
+        return context.log("Please pass an Authorization HTTP request header.");
 
-    context.done();
+    if(authorization != callbackSecret)
+        return context.log("Invalid Authorization HTTP request header.");
+
+    var data = JSON.parse(req.body);
+    var roomId = data.room.id;
+    var message = data.raw_content;
+    var userScreenName = data.profile.screen_name;
+
+    if(!message)
+        return context.log("Invalid MessageEntity data structore.");
+
+    if(message != "ping")
+        return;
+
+    var responseMessage = `@${ userScreenName } pong`;
+    var url = `${ baseUrl }api/v1/bot/rooms/${ roomId }/messages`;
+    request(url, (error, response, body) => {
+        if(error) return context.log("Invalid Authorization HTTP request header.");
+    });
 };

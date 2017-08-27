@@ -2,7 +2,7 @@ module.exports = function (context, req) {
     var callbackSecret = getEnvironmentVariable("KokoroIoCallbackSecret");
     var accessToken = getEnvironmentVariable("KokoroIoAccessToken");
     var baseUrl = getEnvironmentVariable("KokoroIoBaseUrl");
-    var authorization = req.headers["Authorization"];
+    var authorization = req.headers["authorization"];
 
     context.done();
 

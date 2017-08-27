@@ -1,7 +1,7 @@
 module.exports = function (context, req) {
-    var callbackSecret = GetEnvironmentVariable("KokoroIoCallbackSecret");
-    var accessToken = GetEnvironmentVariable("KokoroIoAccessToken");
-    var baseUrl = GetEnvironmentVariable("KokoroIoBaseUrl");
+    var callbackSecret = getEnvironmentVariable("KokoroIoCallbackSecret");
+    var accessToken = getEnvironmentVariable("KokoroIoAccessToken");
+    var baseUrl = getEnvironmentVariable("KokoroIoBaseUrl");
     var authorization = req.headers["Authorization"];
 
     if(!callbackSecret)
@@ -30,3 +30,7 @@ module.exports = function (context, req) {
         if(error) return context.log("Invalid Authorization HTTP request header.");
     });
 };
+
+function getEnvironmentVariable(name) {
+    return process.env[name];
+}

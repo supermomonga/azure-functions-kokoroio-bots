@@ -6,6 +6,8 @@ module.exports = function (context, req) {
     var baseUrl = getEnvironmentVariable("KokoroIoBaseUrl");
     var authorization = req.headers["authorization"];
 
+    context.log(req.body);
+
     if(!callbackSecret) {
         context.log("Please configure KokoroIoCallbackSecret.");
         context.res = { status: 401, body: "Please configure KokoroIoCallbackSecret." };
@@ -37,12 +39,17 @@ module.exports = function (context, req) {
 
     if(message != "ping") {
         context.res = { status: 200, body: "Not a ping." };
-        return;
+        return context.done();
     }
 
     var responseMessage = `@${ userScreenName } pong`;
     var url = `${ baseUrl }api/v1/bot/rooms/${ roomId }/messages`;
-    request(url, (error, response, body) => {
+    var options = {
+        uri: url,
+        headers: {"Content-type": "application/x-www-form-urlencoded",},
+        form: {"message": responseMessage}
+    };
+    request.post(options, (error, response, body) => {
         if(error) {
             context.log("Invalid Authorization HTTP request header.");
             context.res = { status: 401, body: "Invalid Authorization HTTP request header." };

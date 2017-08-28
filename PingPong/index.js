@@ -44,9 +44,13 @@ module.exports = function (context, req) {
 
     var responseMessage = `@${ userScreenName } pong`;
     var url = `${ baseUrl }api/v1/bot/rooms/${ roomId }/messages`;
+    context.log(`Request to: ${url}`);
     var options = {
         uri: url,
-        headers: {"Content-type": "application/x-www-form-urlencoded",},
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded",
+            "X-Access-Token": accessToken
+        },
         form: {"message": responseMessage}
     };
     request.post(options, (error, response, body) => {

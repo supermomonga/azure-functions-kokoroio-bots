@@ -15,7 +15,7 @@ module.exports = function (context, req) {
     if(authorization != callbackSecret)
         return context.log("Invalid Authorization HTTP request header.");
 
-    var data = JSON.parse(req.body);
+    var data = req.body;
     var roomId = data.room.id;
     var message = data.raw_content;
     var userScreenName = data.profile.screen_name;
